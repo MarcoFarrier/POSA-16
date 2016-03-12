@@ -42,6 +42,15 @@ public class PalantiriManager {
         // use a "fair" implementation that mediates concurrent access
         // to the given Palantiri.
         // TODO -- you fill in here.
+
+        mPalantiriMap = new HashMap<Palantir, Boolean>();
+
+        for(Palantir p : palantiri)
+        {
+            mPalantiriMap.put(p, true);
+        }
+
+        mAvailablePalantiri = new Semaphore(palantiri.size(), true);
     }
 
     /**
@@ -56,6 +65,19 @@ public class PalantiriManager {
         // this key with "false" to indicate the Palantir isn't
         // available and then return that palantir to the client. 
         // TODO -- you fill in here.
+
+        mAvailablePalantiri.acquireUninterruptibly();
+
+        for(HashMap.Entry<Palantir, Boolean> entry : mPalantiriMap.entrySet())
+        {
+            if(entry.getValue())
+            {
+                entry.setValue(false);
+                return entry.getKey();
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -67,6 +89,10 @@ public class PalantiriManager {
         // in a thread-safe manner and release the Semaphore if all
         // works properly.
         // TODO -- you fill in here.
+
+        mPalantiriMap.put(palantir, true);
+        mAvailablePalantiri.release();
+
     }
 
     /*

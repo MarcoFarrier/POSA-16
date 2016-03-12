@@ -149,6 +149,14 @@ public class BeingRunnable
      */
     private boolean incrementGazingCountAndCheck(Palantir palantir) {
         // @@ TODO - You fill in here.
+        Long incrementedCount = mPresenter.mGazingThreads.incrementAndGet();
+        if(incrementedCount > Options.instance().numberOfPalantiri())
+        {
+           mPresenter.shutdown();
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -158,5 +166,7 @@ public class BeingRunnable
      */
     private void decrementGazingCount() {
         // @@ TODO - You fill in here.
+
+        mPresenter.mGazingThreads.decrementAndGet();
     }
 }

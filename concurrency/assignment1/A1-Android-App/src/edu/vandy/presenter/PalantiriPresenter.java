@@ -268,6 +268,22 @@ public class PalantiriPresenter
         // perform the BeingRunnable logic, add them to the ArrayList,
         // and then start all the Threads in the ArrayList.
         // TODO - You fill in here.
+
+        mBeingsThreads = new ArrayList<BeingThread>();
+
+        for(int i = 0; i < beingCount; i++)
+        {
+            final Runnable myBeingRunnable = new BeingRunnable(i, this);
+            final BeingThread t = new BeingThread(myBeingRunnable, i, this);
+            mBeingsThreads.add(t);
+        }
+
+        for(BeingThread b : mBeingsThreads)
+        {
+            b.start();
+        }
+
+
     }
 
     /**
@@ -279,6 +295,24 @@ public class PalantiriPresenter
         // finish and then calls mView.get().done() to inform the View
         // layer that the simulation is done.
         // TODO -- you fill in here.
+
+        Thread waitingThread = new Thread(){
+            @Override
+            public void run() {
+                for(BeingThread b : mBeingsThreads) {
+                    try {
+                        b.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                mView.get().done();
+            }
+        };
+
+        waitingThread.start();
+
+
     }
 
     /**
