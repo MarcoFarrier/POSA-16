@@ -23,6 +23,7 @@ public class PalantiriModel
     private final static String TAG = 
         PalantiriModel.class.getName();
 
+    
     /**
      * Mediates concurrent access of multiple Middle-Earth Beings to a
      * (smaller) fixed number of available Palantiri.
