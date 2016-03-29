@@ -85,7 +85,7 @@ public class BeingAsyncTask
                 // been cancelled.
                 // TODO -- you fill in here by replacing "false" with
                 // the appropriate method call to an AsyncTask method.
-                if (false) {
+                if (isCancelled()) {
                     // If we've been instructed to stop gazing, notify
                     // the UI and exit gracefully.
                     presenter.mView.get().threadShutdown(mIndex);
@@ -96,17 +96,19 @@ public class BeingAsyncTask
                 // TODO -- you fill in here with the appropriate
                 // call to an AsyncTask method.
 
+                publishProgress(presenter.mView.get().markWaiting(mIndex));
+
                 // Get a Palantir - this call blocks if there are no
                 // available Palantiri.
                 palantir =
-                    presenter.getModel().acquirePalantir();
+                        presenter.getModel().acquirePalantir();
 
                 if (palantir == null)
                     Log.d(TAG,
-                          "Received a null palantir in "
-                          + Thread.currentThread().getId()
-                          + " for Being "
-                          + mIndex);
+                            "Received a null palantir in "
+                                    + Thread.currentThread().getId()
+                                    + " for Being "
+                                    + mIndex);
 
                 // Make sure we were supposed to get a Palantir.
                 if (!incrementGazingCountAndCheck(presenter))
@@ -116,9 +118,13 @@ public class BeingAsyncTask
                 // TODO -- you fill in here with the appropriate
                 // call to an AsyncTask method.
 
+                publishProgress(presenter.mView.get().markUsed(palantir.getId()));
+
                 // Show that we're gazing on the screen.
                 // TODO -- you fill in here with the appropriate
                 // call to an AsyncTask method.
+
+                publishProgress(presenter.mView.get().markGazing(mIndex));
 
                 // Gaze at my Palantir for the alloted time.
                 palantir.gaze();
@@ -127,11 +133,15 @@ public class BeingAsyncTask
                 // TODO -- you fill in here with the appropriate
                 // call to an AsyncTask method.
 
+                publishProgress(presenter.mView.get().markIdle(mIndex));
+
                 Utils.pauseThread(500);
 
                 // Mark the Palantir as being free.
                 // TODO -- you fill in here with the appropriate call
                 // to an AsyncTask method.
+
+                publishProgress(presenter.mView.get().markFree(palantir.getId()));
 
                 Utils.pauseThread(500);
 
@@ -140,10 +150,10 @@ public class BeingAsyncTask
                 decrementGazingCount(presenter);
             } catch (Exception e) {
                 Log.d(TAG,
-                      "Exception " 
-                      + e 
-                      + " caught in index "
-                      + mIndex);
+                        "Exception "
+                                + e
+                                + " caught in index "
+                                + mIndex);
 
                 // If we're interrupted by an exception, notify the UI and
                 // exit gracefully.
@@ -155,15 +165,16 @@ public class BeingAsyncTask
             }
 
             Log.d(TAG,
-                  "Thread "
-                  + mIndex
-                  + " has finished "
-                  + i 
-                  + " of its "
-                  + Options.instance().gazingIterations()
-                  + " gazing iterations");
-            return (Void) null;
+                    "Thread "
+                            + mIndex
+                            + " has finished "
+                            + i
+                            + " of its "
+                            + Options.instance().gazingIterations()
+                            + " gazing iterations");
         }
+            return (Void) null;
+
     }
 
     /**
@@ -175,6 +186,8 @@ public class BeingAsyncTask
         // TODO -- you fill in here with the appropriate call to
         // the runnableCommands that will cause the progress
         // update to be displayed in the UI thread.
+
+        runnableCommands[0].run();
     }
 
     /**

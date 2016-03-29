@@ -131,6 +131,7 @@ public class PalantiriPresenter
                 // identifies each Being.
                 // TODO -- you fill in here by replacing "return null"
                 // with the appropriate code.
+                return new BeingThread(runnable, mBeingCount.getAndIncrement(), PalantiriPresenter.this);
             }
         };
 
@@ -200,7 +201,7 @@ public class PalantiriPresenter
     /**
      * Hook method called to shutdown the Model layer.
      *
-     * @param isChangeConfigurations
+     * @param isChangingConfigurations
      *        True if a runtime configuration triggered the onDestroy() call.
      */
     @Override
@@ -278,6 +279,10 @@ public class PalantiriPresenter
 
             // Cancel all the BeingAsyncTasks.
             // TODO - you fill in here.
+            for(BeingAsyncTask bat : mBeingsAsyncTasks)
+            {
+                bat.cancel(true);
+            }
         }
     }
 
@@ -372,5 +377,19 @@ public class PalantiriPresenter
         // ThreadFactory instance.  Finally, iterate through all the
         // BeingAsyncTasks and execute them on the threadPoolExecutor.
         // TODO - You fill in here.
+
+        mBeingsAsyncTasks = new ArrayList<BeingAsyncTask>();
+
+        for (int i = 0; i < beingCount; i++)
+        {
+            mBeingsAsyncTasks.add(new BeingAsyncTask(i, mEntryBarrier, mExitBarrier));
+        }
+
+        ThreadPoolExecutor tpe = new ThreadPoolExecutor(beingCount, beingCount, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), mThreadFactory);
+
+        for(BeingAsyncTask bat : mBeingsAsyncTasks)
+        {
+            bat.executeOnExecutor(tpe, this);
+        }
     }
 }

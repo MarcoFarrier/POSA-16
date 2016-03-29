@@ -1,6 +1,7 @@
 package edu.vandy.model;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 
@@ -41,6 +42,15 @@ public class PalantiriManager {
         // Semaphore to use a "fair" implementation that mediates
         // concurrent access to the given Palantiri.
         // TODO -- you fill in here.
+
+        mPalantiriMap = new ConcurrentHashMap<Palantir, Boolean>();
+
+        for(Palantir p : palantiri)
+        {
+            mPalantiriMap.put(p, true);
+        }
+
+        mAvailablePalantiri = new Semaphore(palantiri.size(), true);
     }
 
     /**
@@ -56,6 +66,18 @@ public class PalantiriManager {
         // and then return that palantir to the client.  There should
         // be *no* synchronized statements in this method.
         // TODO -- you fill in here.
+
+        mAvailablePalantiri.acquireUninterruptibly();
+
+        for(Palantir p : mPalantiriMap.keySet())
+        {
+            if(mPalantiriMap.replace(p, true, false))
+            {
+                return p;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -69,6 +91,8 @@ public class PalantiriManager {
         // properly.  There should be *no* synchronized statements in
         // this method.
         // TODO -- you fill in here.
+        mPalantiriMap.put(palantir, true);
+        mAvailablePalantiri.release();
     }
 
     /*
