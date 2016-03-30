@@ -216,7 +216,7 @@ public class ImagePresenter
         else /* replyMessage.getResultCode() == Activity.RESULT_OK) */
             // Handle a successful download.
             Log.d(TAG,
-                  "received image");
+                  "received image " + replyMessage.getImagePathname().toString());
 
         // Try to display all images received successfully.
         tryToDisplayImages();

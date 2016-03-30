@@ -58,7 +58,7 @@ public class ReplyMessage extends RequestReplyMessageBase {
         // IMAGE_PATHNAME key only if the download succeeded.
         // TODO -- you fill in here.
         if(pathToImageFile != null)
-            replyMessage.setDirectoryPathname(pathToImageFile);
+            replyMessage.setImagePathname(pathToImageFile);
 
         return replyMessage;
     }
