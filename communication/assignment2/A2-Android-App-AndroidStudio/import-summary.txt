@@ -1,0 +1,30 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => A2AndroidApp\src\main\AndroidManifest.xml
+* libs\android-support-v13.jar => A2AndroidApp\libs\android-support-v13.jar
+* res\ => A2AndroidApp\src\main\res\
+* src\ => A2AndroidApp\src\main\java\
+* C:\Users\Marco\SkyDrive\Documents\POSA-16\communication\assignment2\A2-Android-Test\libs\robotium-solo-5.5.3.jar => A2AndroidApp\libs\robotium-solo-5.5.3.jar
+* C:\Users\Marco\SkyDrive\Documents\POSA-16\communication\assignment2\A2-Android-Test\res\ => A2AndroidApp\src\androidTest\res\
+* C:\Users\Marco\SkyDrive\Documents\POSA-16\communication\assignment2\A2-Android-Test\src\ => A2AndroidApp\src\androidTest\java\
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)
